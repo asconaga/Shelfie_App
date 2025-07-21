@@ -2,14 +2,15 @@ import { Image, StyleSheet, Text, View } from 'react-native'
 import { Link } from 'expo-router'
 
 import logo from '../assets/personwater.png'
+import { useTheme } from '../components/theme.jsx';
 
 const Home = () => {
+    const t = useTheme();
+
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: t.background }]}>
+            <Text style={[styles.title, { color: t.textPrimary }]}>Home</Text>
             <Image source={logo} style={styles.img} />
-            <Text style={styles.title}>Home</Text>
-            <Text>Reading List</Text>
-            <Link style={styles.link} href="/about">About</Link>
         </View>
     )
 }
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontWeight: 'bold',
-        fontSize: 18
+        fontSize: 18,
     },
     img: {
         borderRadius: 30,

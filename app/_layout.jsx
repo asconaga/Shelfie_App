@@ -1,21 +1,23 @@
-import { StyleSheet, Text, useColorScheme, View } from 'react-native'
-import { Slot, Stack, Tabs } from 'expo-router'
+import { StyleSheet } from 'react-native'
+import { Tabs } from 'expo-router'
+import { useTheme } from '../components/theme'
 
 const RootLayout = () => {
-    const colorSchme = useColorScheme();
-    console.log(colorSchme);
+    const t = useTheme();
     return (
-
         <Tabs screenOptions={{
             headerShown: false,
-            tabBarStyle: { backgroundColor: '#000' },
+            tabBarStyle: { backgroundColor: t.background },
 
             tabBarActiveTintColor: 'tomato',
-            tabBarInactiveTintColor: 'gray',
+            tabBarInactiveTintColor: t.textPrimary,
         }}>
             <Tabs.Screen name="index" options={{ title: "Index" }} />
             <Tabs.Screen name="books" options={{ title: "Books" }} />
+            <Tabs.Screen name="contacts" options={{ title: "Contacts" }} />
+            <Tabs.Screen name="pokeQuery" options={{ title: "Pokemon" }} />
             <Tabs.Screen name="about" options={{ title: "About" }} />
+
         </Tabs>
     )
 }

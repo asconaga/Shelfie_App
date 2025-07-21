@@ -1,20 +1,20 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 
 import logo from '../assets/clown2boris.jpg'
-import { Link } from 'expo-router'
+import { useTheme } from '../components/theme';
 
 const About = () => {
+    const t = useTheme();
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: t.background }]}>
+            <Text style={[styles.title, { color: t.textPrimary }]}>About</Text>
             <Image source={logo} style={styles.img} />
-            <Text>About</Text>
-            <Link style={styles.link} href={"/"}>Back Gnome</Link >
             <Pressable
                 onPress={() => alert('Dynamic style!')}
                 android_ripple={{ color: 'white' }}
                 style={({ pressed }) => [
                     {
-                        backgroundColor: pressed ? 'dodgerblue' : 'skyblue',
+                        backgroundColor: pressed ? t.pressed : 'skyblue',
                         transform: pressed ? [{ scale: 0.96 }] : [{ scale: 1 }],
                     },
                     styles.buttonBase,
@@ -36,10 +36,16 @@ const styles = StyleSheet.create({
     },
     img: {
         borderRadius: 30,
+        marginBottom: 20,
     },
     text: {
         fontSize: 18,
         color: '#333',
+
+    },
+    title: {
+        fontWeight: 'bold',
+        fontSize: 18
     },
     buttonBase: {
         paddingVertical: 20,
