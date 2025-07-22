@@ -1,8 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTheme } from './theme';
 
-const CardWidget = ({ index, onPress }) => {
+const CardWidget = ({ id, selected, onPress }) => {
     const t = useTheme();
     const [layout, setLayout] = useState({ width: 0, height: 0 });
     return (
@@ -12,12 +12,12 @@ const CardWidget = ({ index, onPress }) => {
         }}
             onPress={onPress}
             style={({ pressed }) => [
-                styles.card, { backgroundColor: t.card },
+                styles.card, { backgroundColor: selected ? t.active : t.card, },
                 pressed && { backgroundColor: t.pressed },
             ]}
         >
-            <Text style={[styles.title, { color: t.textPrimary }]}>Book {index + 1}</Text>
-            <Text style={[styles.subtitle, { color: t.textSecondary }]}>This is a simple card.</Text>
+            <Text style={[styles.title, { color: t.textPrimary }]}>Card {id}</Text>
+            <Text style={[styles.subtitle, { color: t.textSecondary }]}>This is a simple {selected} card.</Text>
 
         </Pressable>
     )

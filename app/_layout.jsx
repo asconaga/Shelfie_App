@@ -13,7 +13,7 @@ const RootLayout = () => {
             tabBarInactiveTintColor: t.textPrimary,
         }}>
             <Tabs.Screen name="index" options={{ title: "Index" }} />
-            <Tabs.Screen name="books" options={{ title: "Books" }} />
+            <Tabs.Screen name="books" options={{ title: "Cards" }} />
             <Tabs.Screen name="contacts" options={{ title: "Contacts" }} />
             <Tabs.Screen name="pokeQuery" options={{ title: "Pokemon" }} />
             <Tabs.Screen name="about" options={{ title: "About" }} />
