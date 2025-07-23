@@ -21,7 +21,8 @@
     "expo-contacts": "~14.2.5",
     "react-dom": "19.0.0",
     "react-native-web": "^0.20.0",
-    "expo-sqlite": "~15.2.14"
+    "expo-sqlite": "~15.2.14",
+    "@react-native-async-storage/async-storage": "2.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

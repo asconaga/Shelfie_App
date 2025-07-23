@@ -1,9 +1,39 @@
-import * as SQLite from 'expo-sqlite';
+import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Open (or create) the database; this returns a Promise<SQLiteDatabase>
-const dbPromise = SQLite.openDatabaseAsync('shelfie.db');
+// are we running in a browser?
+const isWeb = true; // Platform.OS === 'web';
+
+let dbPromise = null;
+if (!isWeb) {
+    // const SQLite = require('expo-sqlite');
+    // dbPromise = SQLite.openDatabaseAsync('shelfie.db');
+}
+
+// AsyncStorage “table” key
+const STORAGE_KEY = 'shelfie_cards';
+
+// ensure we have 100 cards seeded in AsyncStorage
+async function ensureWebCards() {
+    const raw = await AsyncStorage.getItem(STORAGE_KEY);
+    if (raw === null) {
+        const cards = Array.from({ length: 100 }, (_, i) => ({
+            id: i + 1,
+            selected: 0,
+        }));
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+        return cards;
+    }
+    return JSON.parse(raw);
+}
+
 
 export async function initDatabase() {
+    if (isWeb) {
+        await ensureWebCards();
+        return;
+    }
+
     const db = await dbPromise;
 
     // try {
@@ -41,20 +71,22 @@ export async function initDatabase() {
 }
 
 // toggle one row
-export async function setSelected(index, newVal) {
+export async function setSelected(id, newVal) {
+    if (isWeb) {
+        const cards = await ensureWebCards();
+        const idx = cards.findIndex((c) => c.id === id);
+        if (idx < 0)
+            throw new Error(`No card with id ${id}`);
+        cards[idx].selected = newVal;
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+        return { success: true };
+    }
+
     const db = await dbPromise;
     const sql = `UPDATE cards SET selected = ? WHERE id = ?;`;
-    const params = [newVal, index];
+    const params = [newVal, id];
 
-    console.log('[SQL ▶]', sql, params);
-    try {
-        const result = await db.runAsync(sql, params);
-        console.log('[SQL ✔]', result);
-        return result;
-    } catch (error) {
-        console.error('[SQL ✖]', error);
-        throw error;   // or handle it however you like
-    }
+    return db.runAsync(sql, params);
 }
 
 /**
@@ -62,14 +94,12 @@ export async function setSelected(index, newVal) {
  * @returns {Promise<Array<{ id: number; name: string; value: string }>>}
  */
 export async function fetchItems() {
-    const db = await dbPromise;
-    try {
-        const rows = await db.getAllAsync(`SELECT * FROM cards;`);
-        return rows;
-    } catch (error) {
-        console.error('Error fetching items', error);
-        throw error;
+    if (isWeb) {
+        return ensureWebCards();
     }
+
+    const db = await dbPromise;
+    return db.getAllAsync(`SELECT * FROM cards;`);
 }
 
 // If you need direct access elsewhere:

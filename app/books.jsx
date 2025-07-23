@@ -22,8 +22,6 @@ const Books = () => {
             } catch (err) {
                 console.error(err);
                 setError(err);
-            } finally {
-                setLoading(false);
             }
         }
 
